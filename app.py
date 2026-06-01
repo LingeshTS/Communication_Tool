@@ -421,7 +421,7 @@ with tab3:
         errors_html = "".join([f"<li>{e}</li>" for e in errors_list])
         steps_html = "".join([f"<li>STEP {idx+1}: {adv}</li>" for idx, adv in enumerate(suggestions_list)])
 
-        # Unified single configuration entry point for absolute safety
+       # Unified single configuration entry point for absolute path safety
         clean_user_id = "".join([c for c in str(user_id) if c.isalnum()]).lower()
         chart_image_path = os.path.join(os.getcwd(), f"temp_radar_{clean_user_id}.png")
         
@@ -455,12 +455,10 @@ with tab3:
             plt.savefig(chart_image_path, bbox_inches='tight', dpi=150)
             plt.close()
             
-            # Link it via file schema directly to the PDF compiler context
-            image_url = f"file://{os.path.abspath(chart_image_path)}"
-            image_html = f'<img src="{image_url}" width="230" height="230" />'
+            # Use the local file name as the source tag for the compiler lookup mapping
+            image_html = f'<img src="temp_radar_{clean_user_id}.png" width="230" height="230" />'
             
         except Exception as e:
-            # Fallback to visual table matrix representation if disk output fails
             image_html = f'<p style="color:red; font-size:10pt;">Graphic engine paused: {str(e)}</p>'
 
         report_html = f"""
@@ -523,17 +521,29 @@ with tab3:
         pdf_data = None
         clean_filename = f"Performance_Report_{clean_user_id}_{user_name.replace(' ', '_')}.pdf"
 
+        # This core helper bypasses Cloud system path walls safely
+        def xhtml2pdf_image_callback(uri, rel):
+            # If the system looks for our cached file, return its absolute reference path
+            if uri.endswith(f"temp_radar_{clean_user_id}.png"):
+                return os.path.join(os.getcwd(), uri)
+            return uri
+
         try:
             from io import BytesIO
             from xhtml2pdf import pisa
             
             pdf_buffer = BytesIO()
-            pisa_status = pisa.CreatePDF(report_html, dest=pdf_buffer)
+            # Inject the link_callback directly into pisa compilation lifecycle
+            pisa_status = pisa.CreatePDF(
+                report_html, 
+                dest=pdf_buffer,
+                link_callback=xhtml2pdf_image_callback
+            )
             
             if not pisa_status.err:
                 pdf_data = pdf_buffer.getvalue()
             else:
-                st.error("PDF Engine Error parsing layout configurations.")
+                st.error("XHTML2PDF Error parsing layout configurations.")
         except Exception as e: 
             st.error(f"PDF Compiler Error: {str(e)}")
         finally:
