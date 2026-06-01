@@ -291,7 +291,7 @@ with tab2:
     if st.session_state.exam_active and st.session_state.current_section == "Writing" and st.session_state.phase == "Preparation":
         st.warning("Preparation Phase Active: Review your assignment prompt. The typing window unlocks automatically when prep time ends.")
     
-    st.write(f"Type your essay response below. (Max {WORD_LIMIT} words).")
+    st.write(f"Topic: Time Management. Type your essay response below. (Max {WORD_LIMIT} words).")
     user_text = st.text_area("Enter your response:", height=200, placeholder="Inputs unlock automatically during active phase...", disabled=not is_writing_active)
     
     # Hide spelling highlights natively
