@@ -231,7 +231,7 @@ with tab1:
     if st.session_state.exam_active and st.session_state.current_section == "Audio" and st.session_state.phase == "Preparation":
         st.warning("Preparation Phase Active: Organize your thoughts. Audio recording tools unlock when the countdown hits zero.")
     
-    st.write("Click the Microphone icon below to record your response natively.")
+    st.write("Talk about Time Management.Click the Microphone icon below to record your response natively.")
     from audio_recorder_streamlit import audio_recorder
     audio_bytes = audio_recorder(text="Click to record speaking path", recording_color="#d32f2f", neutral_color="#333333", icon_size="2x")
     
