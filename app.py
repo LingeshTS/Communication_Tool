@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 import time
 import os
 
-FASTAPI_BACKEND_URL = "http://127.0.0.1:8000"
+FASTAPI_BACKEND_URL = "https://communication-backend-9c2l.onrender.com"
 
 st.set_page_config(
     page_title="Communication Assessment Tool",
