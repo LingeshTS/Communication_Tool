@@ -421,7 +421,10 @@ with tab3:
         errors_html = "".join([f"<li>{e}</li>" for e in errors_list])
         steps_html = "".join([f"<li>STEP {idx+1}: {adv}</li>" for idx, adv in enumerate(suggestions_list)])
 
-        chart_image_path = f"temp_radar_{user_id}.png"
+        # Ensure the filename is completely clean and lowercase to protect the OS disk path
+        clean_user_id = "".join([c for c in str(user_id) if c.isalnum()]).lower()
+        chart_image_path = os.path.join(os.getcwd(), f"temp_radar_{clean_user_id}.png")
+        
         try:
             pdf_fig = go.Figure(data=go.Scatterpolar(
                 r=[grammar_score, vocabulary_score, conciseness_score, impact_score], 
@@ -429,10 +432,15 @@ with tab3:
                 fill='toself', line_color='rgb(214, 39, 40)'
             ))
             pdf_fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, width=360, height=320, margin=dict(l=60, r=60, t=30, b=30))
+            
+            # Force the engine to output a safe, local standalone image file
             pdf_fig.write_image(chart_image_path, engine="kaleido")
-            image_html = f'<img src="{os.path.abspath(chart_image_path)}" width="230" height="230" />'
+            
+            # Convert absolute system path to a proper file URL schema that xhtml2pdf demands
+            image_url = f"file://{os.path.abspath(chart_image_path)}"
+            image_html = f'<img src="{image_url}" width="230" height="230" />'
         except Exception as e:
-            image_html = f'<p style="color:red;">Chart graphics offline ({str(e)})</p>'
+            image_html = f'<p style="color:red;">Chart graphics temporarily offline ({str(e)})</p>'
 
         report_html = f"""
         <html>
