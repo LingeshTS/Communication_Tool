@@ -206,13 +206,6 @@ else:
             st.session_state.phase_start_epoch = time.time()
             st.rerun()
 
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("Exam Termination")
-    if st.sidebar.button("End Test and Generate Report", type="secondary", use_container_width=True):
-        st.session_state.exam_active = False
-        st.components.v1.html("<script>if(window.parent.document.fullscreenElement){window.parent.document.exitFullscreen();}</script>", height=0)
-        st.rerun()
-
 WORD_LIMIT = 150
 st.title("Secure Communication Assessment Environment")
 if not st.session_state.exam_active:
