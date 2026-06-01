@@ -75,7 +75,7 @@ if st.session_state.exam_active and st.session_state.phase_start_epoch is not No
     elapsed = int(time.time() - st.session_state.phase_start_epoch)
     
     # Preparation phase gets 2 minutes (120s), Active phase gets 5 minutes (300s)
-    target_limit = 120 if st.session_state.phase == "Preparation" else 300
+    target_limit = 60 if st.session_state.phase == "Preparation" else 180
     time_remaining = max(target_limit - elapsed, 0)
     
     # Auto-advance phase when time expires
@@ -231,7 +231,7 @@ with tab1:
     if st.session_state.exam_active and st.session_state.current_section == "Audio" and st.session_state.phase == "Preparation":
         st.warning("Preparation Phase Active: Organize your thoughts. Audio recording tools unlock when the countdown hits zero.")
     
-    st.write("Talk about Time Management.Click the Microphone icon below to record your response natively.")
+    st.write("Talk on Time Management.  Click the Microphone icon below to record your response natively.")
     from audio_recorder_streamlit import audio_recorder
     audio_bytes = audio_recorder(text="Click to record speaking path", recording_color="#d32f2f", neutral_color="#333333", icon_size="2x")
     
@@ -291,7 +291,7 @@ with tab2:
     if st.session_state.exam_active and st.session_state.current_section == "Writing" and st.session_state.phase == "Preparation":
         st.warning("Preparation Phase Active: Review your assignment prompt. The typing window unlocks automatically when prep time ends.")
     
-    st.write(f"Topic: Time Management. Type your essay response below. (Max {WORD_LIMIT} words).")
+    st.write(f"Topic : Time Management. Type your essay response below. (Max {WORD_LIMIT} words).")
     user_text = st.text_area("Enter your response:", height=200, placeholder="Inputs unlock automatically during active phase...", disabled=not is_writing_active)
     
     # Hide spelling highlights natively

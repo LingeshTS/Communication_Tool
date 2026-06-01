@@ -2,9 +2,10 @@ streamlit
 fastapi
 uvicorn
 pydantic
-faster-whisper
 textstat
 plotly
 kaleido
 xhtml2pdf
 audio-recorder-streamlit
+SpeechRecognition
+pydub
