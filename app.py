@@ -424,23 +424,47 @@ with tab3:
         # Ensure the filename is completely clean and lowercase to protect the OS disk path
         clean_user_id = "".join([c for c in str(user_id) if c.isalnum()]).lower()
         chart_image_path = os.path.join(os.getcwd(), f"temp_radar_{clean_user_id}.png")
+        # Clean the user ID for a stable system filename path
+        clean_user_id = "".join([c for c in str(user_id) if c.isalnum()]).lower()
+        chart_image_path = os.path.join(os.getcwd(), f"temp_radar_{clean_user_id}.png")
         
         try:
-            pdf_fig = go.Figure(data=go.Scatterpolar(
-                r=[grammar_score, vocabulary_score, conciseness_score, impact_score], 
-                theta=['Grammar/<br>Ease', 'Vocabulary<br>Sophistication', 'Conciseness<br>Score', 'Impact<br>Alignment'], 
-                fill='toself', line_color='rgb(214, 39, 40)'
-            ))
-            pdf_fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, width=360, height=320, margin=dict(l=60, r=60, t=30, b=30))
+            import matplotlib.pyplot as plt
+            import numpy as np
+
+            # Map out the 4 core scoring channels symmetrically
+            labels = ['Grammar/Ease', 'Vocabulary Soph.', 'Conciseness', 'Impact Alignment']
+            stats = [grammar_score, vocabulary_score, conciseness_score, impact_score]
             
-            # Force the engine to output a safe, local standalone image file
-            pdf_fig.write_image(chart_image_path, engine="kaleido")
+            # Close the radar loop mathematically by repeating the first value
+            angles = np.linspace(0, 2*np.pi, len(labels), endpoint=False).tolist()
+            stats = stats + [stats[0]]
+            angles = angles + [angles[0]]
             
-            # Convert absolute system path to a proper file URL schema that xhtml2pdf demands
+            # Initialize a pure standalone Matplotlib Polar Plot
+            fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
+            
+            # Draw the filled polygon structure matching your dashboard colors
+            ax.fill(angles, stats, color='#D62728', alpha=0.25)
+            ax.plot(angles, stats, color='#D62728', linewidth=2)
+            
+            # Setup the clean visual boundaries (0 to 100 max rating scale)
+            ax.set_yticklabels([])
+            ax.set_xticks(angles[:-1])
+            ax.set_xticklabels(labels, fontsize=8, color='#1A365D', weight='bold')
+            ax.set_ylim(0, 100)
+            
+            # Export chart image asset natively to the server disk cache
+            plt.savefig(chart_image_path, bbox_inches='tight', dpi=150)
+            plt.close()
+            
+            # Link it via file schema directly to the PDF compiler context
             image_url = f"file://{os.path.abspath(chart_image_path)}"
             image_html = f'<img src="{image_url}" width="230" height="230" />'
+            
         except Exception as e:
-            image_html = f'<p style="color:red;">Chart graphics temporarily offline ({str(e)})</p>'
+            # Fallback to visual table matrix representation if disk output fails
+            image_html = f'<p style="color:red; font-size:10pt;">Graphic engine paused: {str(e)}</p>'
 
         report_html = f"""
         <html>
