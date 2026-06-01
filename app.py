@@ -533,7 +533,7 @@ with tab3:
             if not pisa_status.err:
                 pdf_data = pdf_buffer.getvalue()
             else:
-                st.error("❌ PDF Engine Error parsing layout configurations.")
+                st.error("PDF Engine Error parsing layout configurations.")
         except Exception as e: 
             st.error(f"PDF Compiler Error: {str(e)}")
         finally:
