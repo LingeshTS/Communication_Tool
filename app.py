@@ -411,7 +411,7 @@ with tab3:
         fig_progress.update_layout(title='Longitudinal Trainee Progress Matrix', xaxis_title='Timeline Evaluations', template='plotly_white')
         st.plotly_chart(fig_progress, use_container_width=True)
 
-        # =================================================================
+       # =================================================================
         # EXPORT CERTIFIED EVALUATION RECORD
         # =================================================================
         st.markdown("---")
@@ -421,10 +421,7 @@ with tab3:
         errors_html = "".join([f"<li>{e}</li>" for e in errors_list])
         steps_html = "".join([f"<li>STEP {idx+1}: {adv}</li>" for idx, adv in enumerate(suggestions_list)])
 
-        # Ensure the filename is completely clean and lowercase to protect the OS disk path
-        clean_user_id = "".join([c for c in str(user_id) if c.isalnum()]).lower()
-        chart_image_path = os.path.join(os.getcwd(), f"temp_radar_{clean_user_id}.png")
-        # Clean the user ID for a stable system filename path
+        # Unified single configuration entry point for absolute safety
         clean_user_id = "".join([c for c in str(user_id) if c.isalnum()]).lower()
         chart_image_path = os.path.join(os.getcwd(), f"temp_radar_{clean_user_id}.png")
         
@@ -522,16 +519,35 @@ with tab3:
         </html>
         """
 
+        # Initialize explicit state containers out of loop scopes
+        pdf_data = None
+        clean_filename = f"Performance_Report_{clean_user_id}_{user_name.replace(' ', '_')}.pdf"
+
         try:
             from io import BytesIO
             from xhtml2pdf import pisa
+            
             pdf_buffer = BytesIO()
             pisa_status = pisa.CreatePDF(report_html, dest=pdf_buffer)
+            
             if not pisa_status.err:
-                clean_filename = f"Performance_Report_{user_id}_{user_name.replace(' ', '_')}.pdf"
-                st.download_button(label="Download Certified Scorecard PDF", data=pdf_buffer.getvalue(), file_name=clean_filename, mime="application/pdf", type="primary")
-        except Exception as e: st.error(f"PDF Compiler Error: {str(e)}")
+                pdf_data = pdf_buffer.getvalue()
+            else:
+                st.error("❌ PDF Engine Error parsing layout configurations.")
+        except Exception as e: 
+            st.error(f"PDF Compiler Error: {str(e)}")
         finally:
+            # Safely handle cache wiping loops
             if os.path.exists(chart_image_path):
                 try: os.remove(chart_image_path)
                 except Exception: pass
+
+        # RENDER DOWNLOAD BUTTON NATIVELY OUTSIDE SCOPE LIFECYCLES
+        if pdf_data is not None:
+            st.download_button(
+                label="Download Certified Scorecard PDF",
+                data=pdf_data,
+                file_name=clean_filename,
+                mime="application/pdf",
+                type="primary"
+            )
