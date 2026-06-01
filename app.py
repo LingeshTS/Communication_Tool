@@ -433,6 +433,8 @@ with tab3:
             
             # Initialize a pure standalone Matplotlib Polar Plot
             fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
+
+            ax.set_aspect('equal')
             
             # Draw the filled polygon structure matching your dashboard colors
             ax.fill(angles, stats, color='#D62728', alpha=0.25)
