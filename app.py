@@ -500,7 +500,7 @@ with tab3:
             
             <div class="section-title">Written Competency Ratings</div>
             <table class="metric-table">
-                <tr><th>Grammar and Clarity</th><th>Vocabulary Depth</th><th>Conciseness Profile</th><th>Impact Vector</th></tr>
+                <tr><th>Grammar and Clarity</th><th>Vocabulary Depth</th><th>Conciseness Profile</th><th>Impact</th></tr>
                 <tr><td><span class="val">{grammar_score}%</span></td><td><span class="val">{vocabulary_score}%</span></td><td><span class="val">{conciseness_score}%</span></td><td><span class="val">{impact_score}%</span></td></tr>
             </table>
             
