@@ -9,3 +9,4 @@ xhtml2pdf
 audio-recorder-streamlit
 SpeechRecognition
 pydub
+matplotlib
