@@ -4,6 +4,17 @@ import plotly.graph_objects as go
 import time
 import os
 
+@st.cache_data(ttl=60)
+def wake_up_backend():
+    try:
+        # Pings your FastAPI root endpoint
+        requests.get("https://communication-backend-9c2l.onrender.com/", timeout=5)
+    except Exception:
+        pass
+
+# Run the wake-up call right away
+wake_up_backend()
+
 FASTAPI_BACKEND_URL = "https://communication-backend-9c2l.onrender.com"
 
 st.set_page_config(
