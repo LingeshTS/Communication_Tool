@@ -4,6 +4,11 @@ import plotly.graph_objects as go
 import time
 import os
 
+st.set_page_config(
+    page_title="Communication Assessment Tool",
+    layout="wide"
+)
+
 @st.cache_data(ttl=60)
 def wake_up_backend():
     try:
@@ -16,11 +21,6 @@ def wake_up_backend():
 wake_up_backend()
 
 FASTAPI_BACKEND_URL = "https://communication-backend-9c2l.onrender.com"
-
-st.set_page_config(
-    page_title="Communication Assessment Tool",
-    layout="wide"
-)
 
 # ---------------------------------------------------------------------
 # INITIALIZE TRAINEE PROFILE WORKSPACE & TIMING STATE STREAMS
